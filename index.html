@@ -15,17 +15,13 @@
         }
 
         :root {
-            --primary-color: #2563eb;
-            --secondary-color: #7c3aed;
-            --accent-color: #f59e0b;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
-            --dark-bg: #0f172a;
-            --light-bg: #f8fafc;
-            --text-dark: #1e293b;
-            --text-light: #64748b;
-            --gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            --gradient-warm: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            --primary-color: #3d7a8a;
+            --accent-color: #d97757;
+            --dark-bg: #1a2332;
+            --light-bg: #f7f9fa;
+            --text-dark: #2d3748;
+            --text-light: #607080;
+            --gradient: linear-gradient(135deg, #3d7a8a 0%, #517a82 100%);
         }
 
         body {
@@ -133,8 +129,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 50%, rgba(217, 119, 87, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(61, 122, 138, 0.08) 0%, transparent 50%);
             animation: pulse 8s ease-in-out infinite;
         }
 
@@ -298,12 +294,12 @@
         }
 
         .concept-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3d7a8a 0%, #4a7581 100%);
             color: white;
             padding: 50px;
             border-radius: 16px;
             margin-bottom: 50px;
-            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 20px 50px rgba(61, 122, 138, 0.2);
         }
 
         .concept-box h3 {
@@ -336,11 +332,11 @@
         }
 
         .comparison-item.bad {
-            border-top: 4px solid #ef4444;
+            border-top: 4px solid #c9685f;
         }
 
         .comparison-item.good {
-            border-top: 4px solid #10b981;
+            border-top: 4px solid #5a9279;
         }
 
         .comparison-item h4 {
@@ -349,15 +345,15 @@
         }
 
         .comparison-item.bad h4 {
-            color: #ef4444;
+            color: #c9685f;
         }
 
         .comparison-item.good h4 {
-            color: #10b981;
+            color: #5a9279;
         }
 
         .analogy-box {
-            background: #fef3c7;
+            background: #f9ede6;
             border: 2px dashed var(--accent-color);
             padding: 40px;
             border-radius: 12px;
@@ -374,8 +370,8 @@
         .stats-section {
             background: white;
             padding: 60px 20px;
-            border-top: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
+            border-top: 1px solid #dce3e8;
+            border-bottom: 1px solid #dce3e8;
         }
 
         .stats-grid {
@@ -714,7 +710,7 @@
         .key-visual {
             display: inline-block;
             padding: 5px 15px;
-            background: rgba(245, 158, 11, 0.2);
+            background: rgba(217, 119, 87, 0.15);
             border-radius: 5px;
             font-weight: 700;
         }
@@ -945,7 +941,7 @@
                         <span class="faq-icon">+</span>
                     </div>
                     <div class="faq-answer">
-                        基本的なAI・LLMの概念を知っていれば十分です。ChatGPTなどを業務で使ったことがあれば、より理解が深まります。初心者の方でも理解できる内容から始めますので、ご安心ください。
+                        不要です。ChatGPTなどを使ったことがあれば、より理解が深まります。初心者の方でも理解できる内容から始めますので、ご安心ください。
                     </div>
                 </div>
 
@@ -955,7 +951,7 @@
                         <span class="faq-icon">+</span>
                     </div>
                     <div class="faq-answer">
-                        約60〜90分を予定しています。プレゼンテーション後に質疑応答の時間も設けますので、疑問点があればその場で解消できます。
+                        約60〜90分を予定しています。
                     </div>
                 </div>
 
@@ -975,7 +971,7 @@
                         <span class="faq-icon">+</span>
                     </div>
                     <div class="faq-answer">
-                        もちろん可能です。オンライン開催ですので、業務の都合に合わせて柔軟に参加していただけます。ただし、できる限り最初から参加されることをお勧めします。
+                        もちろん可能です。オンライン開催ですので、業務の都合に合わせて柔軟に参加していただけます。
                     </div>
                 </div>
             </div>
@@ -988,7 +984,7 @@
             <h2 class="scroll-reveal">エンジニアとしての市場価値を高める</h2>
             <p class="scroll-reveal">
                 「業務命令だから」ではなく、「面白そうだから」参加してください。<br>
-                この機会を逃さず、今すぐ参加登録を。
+                この機会を逃さず、今すぐ参加を。
             </p>
             <a href="https://meet.google.com/sxx-nfcw-qem" class="cta-button-secondary scroll-reveal" target="_blank">
                 Google Meetに参加する 🚀
@@ -1139,8 +1135,8 @@
             
             if (hero) {
                 hero.style.background = `linear-gradient(135deg, 
-                    hsl(${220 + mouseX * 20}, 70%, ${50 + mouseY * 10}%) 0%, 
-                    hsl(${260 + mouseX * 20}, 70%, ${50 + mouseY * 10}%) 100%)`;
+                    hsl(${190 + mouseX * 15}, 45%, ${40 + mouseY * 10}%) 0%, 
+                    hsl(${185 + mouseX * 15}, 40%, ${45 + mouseY * 10}%) 100%)`;
             }
         });
 
