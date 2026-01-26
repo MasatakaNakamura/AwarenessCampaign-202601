@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workInstruction>
+  <title>1on1管理システム プロジェクト作成 — 作業指示書</title>
+
+  <reference>
+    <document path="docs/20260126_001.md">docs/20260126_001.md</document>
+  </reference>
+
+  <worker>AI（このリポジトリ上で自動的に作業を行う前提）</worker>
+  <createdDate>2026-01-25</createdDate>
+
+  <purpose>
+    <item>本リポジトリに対して、新規 Spring Boot ベースの 1on1 管理システム プロジェクトを初期構成する。</item>
+  </purpose>
+
+  <prerequisites>
+    <item>リポジトリはローカルにクローン済みで、作業ブランチが作成されている（例: feat/001-create-project）。</item>
+    <item>Java 開発環境（JDK 11+）、Maven または Gradle が使用可能。</item>
+  </prerequisites>
+
+  <scope>
+    <item>Spring Initializr でのプロジェクトスケルトン生成</item>
+    <item>依存関係追加（最低: Spring Web, Spring Data JPA, H2 または PostgreSQL ドライバ, Lombok など）</item>
+    <item>基本パッケージとエントリクラス、README の作成</item>
+    <item>Dockerfile と docker-compose.yml の追加（必要に応じ）</item>
+    <item>GitHub Actions による簡易 CI 設定</item>
+    <item>ドキュメント（セットアップ手順）記載</item>
+  </scope>
+
+  <procedure>
+    <note>AI が実行する順序</note>
+    <step number="1">Spring Initializr でプロジェクトを生成（MavenまたはGradleを選択）。</step>
+    <step number="2">生成されたスケルトンを backend/ またはルートに配置し、pom.xml/build.gradle を確認。</step>
+    <step number="3">必須依存関係を pom.xml/build.gradle に追加。</step>
+    <step number="4">パッケージ構成を作成: com.example.oneonone（例）下に controller, service, repository, model, config を作成。</step>
+    <step number="5">アプリケーションのエントリポイント（Application クラス）とサンプルのヘルスチェック用コントローラを追加。</step>
+    <step number="6">README.md にセットアップ手順、起動方法、環境変数、DB接続情報を記載。</step>
+    <step number="7">Dockerfile と docker-compose.yml を追加（アプリ + DB サービス）。</step>
+    <step number="8">GitHub Actions ワークフローを .github/workflows/ci.yml に追加（ビルド &amp; 単体テスト実行）。</step>
+    <step number="9">変更をコミットし、リモートにプッシュ（初期コミット）。</step>
+  </procedure>
+
+  <deliverables>
+    <item>
+      <name>プロジェクトソース</name>
+      <path>ルートまたは backend/</path>
+    </item>
+    <item>
+      <name>作業指示書</name>
+      <path>docs/20260126_001_作業指示.md</path>
+    </item>
+    <item>
+      <name>README</name>
+      <path>README.md（ルート）</path>
+    </item>
+    <item>
+      <name>Docker関連</name>
+      <path>Dockerfile, docker-compose.yml</path>
+    </item>
+    <item>
+      <name>CI 設定</name>
+      <path>.github/workflows/ci.yml</path>
+    </item>
+  </deliverables>
+
+  <verification>
+    <item>mvn -f &lt;path&gt; clean package または ./gradlew build が成功すること。</item>
+    <item>コンテナ起動: docker-compose up --build でアプリが起動し、/actuator/health（または作成したエンドポイント）が 200 を返すこと。</item>
+  </verification>
+
+  <estimate>
+    <item>
+      <task>初期スケルトン作成 + README</task>
+      <duration>1〜2時間</duration>
+    </item>
+    <item>
+      <task>Docker/Compose + CI 設定</task>
+      <duration>1時間</duration>
+    </item>
+    <item>
+      <task>合計</task>
+      <duration>約 2〜3時間</duration>
+    </item>
+  </estimate>
+
+  <notes>
+    <item>実装言語は Java（Spring Boot）を想定。別の言語を希望する場合は指示すること。</item>
+    <item>DB は開発時は組み込み DB（H2）で進め、ステージ/本番は PostgreSQL を想定する構成にする。</item>
+  </notes>
+
+  <nextAction>
+    <item>この作業指示に従い、まずプロジェクトスケルトンを生成し、最小限のビルド通過を確認する。</item>
+  </nextAction>
+</workInstruction>
