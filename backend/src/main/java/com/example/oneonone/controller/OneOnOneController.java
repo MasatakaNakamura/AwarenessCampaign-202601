@@ -1,8 +1,11 @@
 package com.example.oneonone.controller;
 
+import com.example.oneonone.dto.OneOnOneHistoryDto;
 import com.example.oneonone.dto.OneOnOneRequest;
 import com.example.oneonone.model.OneOnOne;
+import com.example.oneonone.service.OneOnOneHistoryService;
 import com.example.oneonone.service.OneOnOneService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -19,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class OneOnOneController {
 
     private final OneOnOneService service;
+    private final OneOnOneHistoryService historyService;
 
-    public OneOnOneController(OneOnOneService service) {
+    public OneOnOneController(OneOnOneService service, OneOnOneHistoryService historyService) {
         this.service = service;
+        this.historyService = historyService;
     }
 
     @GetMapping
@@ -34,6 +39,15 @@ public class OneOnOneController {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/history")
+    public ResponseEntity<List<OneOnOneHistoryDto>> history(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(historyService.findHistory(id));
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
