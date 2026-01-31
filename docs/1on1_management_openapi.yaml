@@ -1,0 +1,540 @@
+openapi: 3.0.3
+info:
+  title: 1on1管理システム API
+  version: 1.0.0
+  description: API仕様（初期案）。`docs/1on1_management_api_spec.md` を元に作成。
+servers:
+  - url: http://localhost:8080
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+    OneOnOneSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organizer_id:
+          type: string
+          format: uuid
+        participant_id:
+          type: string
+          format: uuid
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        location:
+          type: string
+        status:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    OneOnOneDetail:
+      allOf:
+        - $ref: '#/components/schemas/OneOnOneSummary'
+        - type: object
+          properties:
+            topics:
+              type: array
+              items:
+                $ref: '#/components/schemas/Topic'
+            minutes:
+              type: array
+              items:
+                $ref: '#/components/schemas/Minute'
+            actions:
+              type: array
+              items:
+                $ref: '#/components/schemas/ActionItem'
+    OneOnOneHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        one_on_one_id:
+          type: integer
+          format: int64
+        status:
+          type: string
+        changed_by:
+          type: string
+        changed_at:
+          type: string
+          format: date-time
+        comment:
+          type: string
+    OneOnOneCreate:
+      type: object
+      required: [organizer_id, participant_id, start_at]
+      properties:
+        organizer_id:
+          type: string
+          format: uuid
+        participant_id:
+          type: string
+          format: uuid
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        location:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    Topic:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        one_on_one_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: integer
+    TopicCreate:
+      type: object
+      required: [one_on_one_id, title]
+      properties:
+        one_on_one_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: integer
+    Minute:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        one_on_one_id:
+          type: string
+          format: uuid
+        content:
+          type: string
+    MinuteCreate:
+      type: object
+      required: [one_on_one_id, content]
+      properties:
+        one_on_one_id:
+          type: string
+          format: uuid
+        content:
+          type: string
+    ActionItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        one_on_one_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        assignee_id:
+          type: string
+          format: uuid
+        due_date:
+          type: string
+          format: date
+        status:
+          type: string
+    ActionCreate:
+      type: object
+      required: [one_on_one_id, title]
+      properties:
+        one_on_one_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        assignee_id:
+          type: string
+          format: uuid
+        due_date:
+          type: string
+          format: date
+paths:
+  /auth/sso/callback:
+    post:
+      summary: SSO コールバック
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/oneonones:
+    get:
+      summary: 予定一覧取得
+      parameters:
+        - name: start
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: participant
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: tag
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: size
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OneOnOneSummary'
+                  page:
+                    type: integer
+                  size:
+                    type: integer
+                  total:
+                    type: integer
+
+    post:
+      summary: 予定作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OneOnOneCreate'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+
+  /api/oneonones/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: 予定詳細
+      responses:
+        '200':
+          description: detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OneOnOneDetail'
+    put:
+      summary: 予定更新
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_at:
+                  type: string
+                  format: date-time
+                end_at:
+                  type: string
+                  format: date-time
+                location:
+                  type: string
+                status:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OneOnOneDetail'
+    delete:
+      summary: 予定キャンセル
+      responses:
+        '204':
+          description: deleted
+
+  /api/oneonones/{id}/history:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: 予定履歴取得
+      responses:
+        '200':
+          description: history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OneOnOneHistory'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/topics:
+    post:
+      summary: 議題作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopicCreate'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+    get:
+      summary: 議題一覧
+      parameters:
+        - name: one_on_one_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: topics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Topic'
+
+  /api/minutes:
+    post:
+      summary: 議事録作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MinuteCreate'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+    get:
+      summary: 議事録一覧
+      parameters:
+        - name: one_on_one_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: minutes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Minute'
+
+  /api/actions:
+    post:
+      summary: アクション作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActionCreate'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+    get:
+      summary: アクション一覧
+      parameters:
+        - name: assignee_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: actions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ActionItem'
+    put:
+      summary: アクション更新（個別は /api/actions/{id} でも可能）
+
+  /api/reports/summary:
+    get:
+      summary: 集計サマリ取得
+      parameters:
+        - name: start
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: end
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: group_by
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: summary
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_oneonones:
+                    type: integer
+                  completion_rate:
+                    type: number
+                    format: float
+
+  /api/reports/export:
+    get:
+      summary: CSVエクスポート
+      parameters:
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [csv]
+      responses:
+        '200':
+          description: csv
+          content:
+            text/csv:
+              schema:
+                type: string
+
+  /api/users/me:
+    get:
+      summary: ログインユーザー情報
+      responses:
+        '200':
+          description: user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSummary'

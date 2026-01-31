@@ -1,0 +1,17 @@
+# Java / Build
+backend/target/
+backend/build/
+backend/.gradle/
+*.log
+*.class
+
+# Spring Boot / IDE
+backend/*.iml
+backend/.DS_Store
+backend/.idea/
+
+# OS
+.DS_Store
+
+# Docker
+*.pid
